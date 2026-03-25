@@ -2,66 +2,92 @@
 
 ## Requisitos Previos
 
-- **Docker Desktop** instalado (Windows/Mac/Linux)
+- **Docker** instalado
+- **Docker Compose** instalado
 - Al menos 2GB de RAM disponible
 
 ---
 
-## 📦 Archivos Incluidos
+## 📥 Opción 1: Clonar desde GitHub (Recomendado)
 
-- `docker-compose.yml` - Configuración de servicios
-- `Dockerfile` - Imagen de PHP + Apache
-- `.env` - Variables de entorno
-- `db/init.sql` - Estructura de base de datos
+```bash
+# 1. Instalar Docker (si no lo tienes)
+sudo apt update
+sudo apt install docker.io docker-compose
+
+# 2. Iniciar Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 3. Clonar el repositorio
+git clone https://github.com/leninobregon/gym_mejoras_docker.git gym_docker
+cd gym_docker
+
+# 4. Copiar archivos de la aplicación
+# Descarga el zip de gym_mejoras desde:
+# https://github.com/leninobregon/gymma/archive/refs/heads/master.zip
+# Extrae el contenido a la carpeta 'app/' (excepto config/Database.php)
+
+# 5. Ejecutar el sistema
+docker-compose up -d
+```
 
 ---
 
-## 🔧 Instalación
+## 📦 Opción 2: Descargar ZIP desde GitHub
 
-### 1. Estructura de carpetas
+```bash
+# 1. Descargar el repositorio como ZIP
+wget https://github.com/leninobregon/gym_mejoras_docker/archive/refs/heads/master.zip
+unzip master.zip
+cd gym_mejoras_docker-master
 
-El proyecto debe tener esta estructura:
+# 2. Descargar la aplicación (gym_mejoras)
+wget https://github.com/leninobregon/gymma/archive/refs/heads/master.zip
+unzip master.zip
+cp -r gymma-master/* app/
+
+# 3. Ejecutar
+docker-compose up -d
+```
+
+---
+
+## 🔧 Configuración de la Aplicación
+
+### Estructura de carpetas
 
 ```
-gym_mejoras_microservicio/
+gym_mejoras_docker/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── .env
 ├── db/
 │   └── init.sql
 └── app/
-    └── [copiar todos los archivos de gym_mejoras]
+    ├── config/
+    │   └── Database.php  ← Ya viene configurado para Docker
+    ├── views/
+    ├── controllers/
+    └── ... (otros archivos de gym_mejoras)
 ```
 
-### 2. Copiar archivos de la aplicación
+### ⚠️ Importante
 
-Copia todo el contenido de `gym_mejoras` (excepto config/Database.php) a la carpeta `app/`.
-
-**NOTA:** El archivo `config/Database.php` ya está configurado para Docker con las credenciales del contenedor.
-
-### 3. Configurar Database.php
-
-El archivo ya viene configurado para Docker:
-- Host: `db` (nombre del servicio MySQL)
+El archivo `app/config/Database.php` ya está configurado para Docker:
+- Host: `db`
 - Usuario: `gymuser`
 - Contraseña: `gympass123`
 - Base de datos: `gym_ma_db`
+
+No lo modifiques.
 
 ---
 
 ## ▶️ Ejecutar el Sistema
 
-### Windows (PowerShell)
-
-```powershell
-cd C:\xampp\htdocs\proyecto\gym_mejoras_microservicio
-docker-compose up -d
-```
-
-### Linux/Mac (Terminal)
-
 ```bash
-cd /ruta/a/gym_mejoras_microservicio
+cd gym_mejoras_docker
 docker-compose up -d
 ```
 
@@ -75,12 +101,10 @@ docker-compose up -d
 | **phpMyAdmin** | http://localhost:8081 |
 
 ### Credenciales phpMyAdmin
-
 - **Usuario:** root
 - **Contraseña:** root
 
 ### Credenciales GYM
-
 - **Usuario:** admin
 - **Contraseña:** admin123
 
@@ -101,41 +125,33 @@ docker-compose down
 # Ver estado
 docker-compose ps
 
-# Reiniciar un servicio
-docker-compose restart web
+# Reiniciar
+docker-compose restart
+
+# Eliminar todo (incluyendo datos)
+docker-compose down -v
 ```
 
 ---
 
 ## 🐛 Solución de Problemas
 
-### Error: "Container already running"
-
+### Docker no está corriendo
 ```bash
-docker-compose down
-docker-compose up -d
+sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-### Error de permisos (Linux)
-
+### Error de permisos
 ```bash
 sudo chown -R $USER:$USER .
 ```
 
 ### Ver logs de errores
-
 ```bash
 docker-compose logs web
 docker-compose logs db
 ```
-
----
-
-## 📝 Notas
-
-- El sistema se ejecuta en el puerto 8080 (para evitar conflictos con XAMPP)
-- Los datos de MySQL se guardan en un volumen Docker
-- La base de datos se inicializa automáticamente con las tablas
 
 ---
 
