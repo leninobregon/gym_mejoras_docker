@@ -86,6 +86,14 @@ No lo modifiques.
 
 ## ▶️ Ejecutar el Sistema
 
+### Opción 1: Script automático (Linux)
+```bash
+cd gym_mejoras_docker
+./deploy.sh
+```
+El script instala Docker si no lo tienes y levanta todo automáticamente.
+
+### Opción 2: Manual
 ```bash
 cd gym_mejoras_docker
 docker-compose up -d
@@ -113,7 +121,10 @@ docker-compose up -d
 ## 📋 Comandos Útiles
 
 ```bash
-# Iniciar servicios
+# Script automático (instala todo y levanta)
+./deploy.sh
+
+# Manual
 docker-compose up -d
 
 # Ver logs
@@ -144,6 +155,7 @@ sudo systemctl enable docker
 
 ### Error de permisos
 ```bash
+chmod +x deploy.sh
 sudo chown -R $USER:$USER .
 ```
 
